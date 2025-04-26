@@ -4,9 +4,9 @@ import './index.scss'
 import App from './App.jsx'
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
+  // <StrictMode>
     <App />
-  </StrictMode>,
+  // </StrictMode>, 
 )
 
 // If you want to start measuring performance in your app, pass a function

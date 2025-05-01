@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
 import classNames from 'classnames';
+import Button from './Button';
 
-const PizzaList = ({name, imageUrl, price, types, sizes}) => {
+const PizzaList = ({id, name, imageUrl, price, types, sizes, onClickAddPizza, addedCount}) => {
     const availableTypes = ['тонкое', 'традиционное'];
     const availableSizes = [26, 30, 40];
     const [activeType, setActiveType] = useState(types[0]);
-    const [activeSize, setActiveSize] = useState(sizes[0]);
+    const [activeSize, setActiveSize] = useState(0);
 
     const onSelectType = (index) => {
         setActiveType(index)
@@ -15,6 +16,17 @@ const PizzaList = ({name, imageUrl, price, types, sizes}) => {
 
     const onSelectSize = (index) => {
         setActiveSize(index)
+    }
+
+    const onAddPizza = () => {
+        const obj = {
+            id,
+            name,
+            price,
+            size: availableSizes[activeSize],
+            type: availableTypes[activeType]
+        }
+        onClickAddPizza(obj);
     }
 
     return (
@@ -59,7 +71,7 @@ const PizzaList = ({name, imageUrl, price, types, sizes}) => {
                 </div>
                 <div className="pizza-block__bottom">
                     <div className="pizza-block__price">от {price} ₽</div>
-                    <div className="button button--outline button--add">
+                    <button onClick={onAddPizza} className="button button--add button--outline">
                     <svg
                         width="12"
                         height="12"
@@ -72,8 +84,8 @@ const PizzaList = ({name, imageUrl, price, types, sizes}) => {
                         />
                     </svg>
                     <span>Добавить</span>
-                    <i>2</i>
-                    </div>
+                    {addedCount && <i>{addedCount}</i>}
+                    </button>
                 </div>
             </div>
     )
@@ -85,6 +97,8 @@ PizzaList.prototype = {
     price: PropTypes.number.isRequired,
     types: PropTypes.arrayOf(PropTypes.number).isRequired,
     sizes: PropTypes.arrayOf(PropTypes.number).isRequired,
+    onClickAddPizza: PropTypes.func,
+    addedCount: PropTypes.number
 
 };
 

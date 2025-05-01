@@ -1,7 +1,8 @@
 import React, {useCallback, useEffect} from 'react'
 import { useSelector, useDispatch} from 'react-redux';
 import {Header, Categories, SortPopup, PizzaList, Skeleton} from '../';
-import { setCategory, setSortBy } from '../../redux/actions/filters';
+import { setCategory, setSortBy} from '../../redux/actions/filters';
+import { addPizzaToBasket } from '../../redux/actions/basket';
 import { fetchPizzas } from '../../redux/actions/pizzas';
 import '../../scss/app.scss';
 
@@ -15,6 +16,7 @@ const sortByNames = [
 
 const MainPage = () => {
   const items = useSelector(({pizzas}) => pizzas.items);
+  const basketItems = useSelector(({basket}) => basket.items)
   const isLoaded = useSelector(({pizzas}) => pizzas.isLoaded);
   const {category, sortBy} = useSelector(({filters}) => filters);
 
@@ -32,6 +34,10 @@ const MainPage = () => {
     dispatch(setSortBy(type))
   }, [])
 
+  const handleAddPizzaToBasket = (obj) => {
+    dispatch(addPizzaToBasket(obj))
+  }
+
   return (
     <div className="wrapper">
       <Header/>
@@ -44,7 +50,11 @@ const MainPage = () => {
           <h2 className="content__title">Все пиццы</h2>
           <div className="content__items">
             {
-              isLoaded ? items.map((pizza) => <PizzaList {...pizza} key={pizza.id}/>) : Array(10).fill(0).map((_, index) => <Skeleton key={index}/>)
+              isLoaded 
+              ? 
+              items.map((pizza) => <PizzaList addedCount={basketItems[pizza.id] && basketItems[pizza.id].length} onClickAddPizza={handleAddPizzaToBasket} {...pizza} key={pizza.id}/>) 
+              : 
+              Array(10).fill(0).map((_, index) => <Skeleton key={index}/>)
             }
           </div>
         </div>
